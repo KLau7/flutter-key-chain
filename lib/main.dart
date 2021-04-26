@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'dart:developer';
 
 void main() {
-  // runApp(MaterialApp(
-  //   home: Landing(),
-  // ));
-  runApp(Landing2());
+  runApp(MaterialApp(
+    home: Landing2(),
+    routes: <String, WidgetBuilder>{
+      '/accounts': (BuildContext context) =>
+          AccList(email: 'email', password: 'password')
+    },
+  ));
 }
 
 class Landing extends StatelessWidget {
@@ -120,35 +124,36 @@ class Landing2 extends StatelessWidget {
             child: (Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildButtonColumn(color, Icons.call, 'CALL'),
-                _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-                _buildButtonColumn(color, Icons.share, 'SHARE'),
+                _buildButtonColumn(
+                    color, Icons.call, 'ACCT', context, 'accounts'),
+                _buildButtonColumn(
+                    color, Icons.near_me, 'MEAL', context, 'accounts'),
+                _buildButtonColumn(
+                    color, Icons.share, 'SHARE', context, 'accounts'),
               ],
             )))
       ],
     ));
 
-    Widget textSection = Container(
-      padding: EdgeInsets.all(32),
-      child: Text(
-          'THEIHierhIHREIOHihdsoifhoid hosidhfioashoifdh disofaoifodishio'),
-    );
-
-    return MaterialApp(
-      title: 'Flutter official layout demo',
-      home: Scaffold(
-        appBar: AppBar(title: Text('Flutter showcase')),
-        body: ListView(children: [titleSection, buttonSection, textSection]),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: Text('Flutter showcase')),
+      body: ListView(children: [titleSection, buttonSection]),
     );
   }
 
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
+  Column _buildButtonColumn(Color color, IconData icon, String label,
+      BuildContext context, String routeName) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color),
+        IconButton(
+          icon: Icon(icon),
+          color: color,
+          onPressed: () {
+            Navigator.pushNamed(context, '/' + routeName);
+          },
+        ),
         Container(
           margin: EdgeInsets.only(top: 8),
           child: Text(
@@ -158,6 +163,54 @@ class Landing2 extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class AccList extends StatelessWidget {
+  AccList({@required this.email, @required this.password});
+
+  final email, password;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget account = Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          color: Colors.green,
+          border: Border.all(color: Colors.green),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Google'),
+          Text(email),
+          Text(password),
+        ],
+      ),
+    );
+
+    Widget account2 = Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset('lib/assets/images/icon_google.png',
+              width: 40, height: 40, fit: BoxFit.cover),
+          Text(email),
+          Text(password),
+        ],
+      ),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('List'),
+      ),
+      body: Column(
+        children: [account2],
+      ),
     );
   }
 }

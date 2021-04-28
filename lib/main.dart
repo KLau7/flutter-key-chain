@@ -1,13 +1,18 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
-import 'dart:developer';
+import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+
+import './widgets/RecipeThumbnail.dart';
 
 void main() {
   runApp(MaterialApp(
     home: Landing2(),
     routes: <String, WidgetBuilder>{
       '/accounts': (BuildContext context) =>
-          AccList(email: 'email', password: 'password')
+          AccList(email: 'email', password: 'password'),
+      '/recipes': (BuildContext context) => Recipes(),
     },
   ));
 }
@@ -127,7 +132,7 @@ class Landing2 extends StatelessWidget {
                 _buildButtonColumn(
                     color, Icons.call, 'ACCT', context, 'accounts'),
                 _buildButtonColumn(
-                    color, Icons.near_me, 'MEAL', context, 'accounts'),
+                    color, Icons.near_me, 'MEAL', context, 'recipes'),
                 _buildButtonColumn(
                     color, Icons.share, 'SHARE', context, 'accounts'),
               ],
@@ -213,4 +218,209 @@ class AccList extends StatelessWidget {
       ),
     );
   }
+}
+
+class Recipes extends StatelessWidget {
+  final List<Map> recipes = [
+    {
+      'name': 'Baked Chicken Breast',
+      'image': 'recipe_baked_chicken_breast.jpeg'
+    },
+    {'name': 'Taco', 'image': 'recipe_taco.jpeg'},
+    {'name': 'Taco', 'image': 'recipe_taco.jpeg'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            title: Text('Recipes',
+              // style: TextStyle(color: Colors.black),
+            ),
+            // elevation: 0,
+            // backgroundColor: Colors.transparent,
+            // iconTheme: IconThemeData(
+            //   color: Colors.black
+            // ),
+            flexibleSpace: Image(
+              image: AssetImage('lib/assets/images/Repeating-Triangles.jpg'),
+              fit: BoxFit.cover,
+            )
+          ),
+        body: ListView(children: [
+          Column(
+            children: new List.generate(
+                recipes.length,
+                (index) => Row(children: [
+                      // IndRecipe(dishName: recipes[index]['name'], imageName: recipes[index]['image'])
+                      RecipeThumbnail(dishName: recipes[index]['name'], imagePath: recipes[index]['image'])
+                    ])),
+          )
+        ]));
+  }
+// #fe3465#4fcdbe#ec8f6e
+// light purple: #ba77ff
+// light blue: #01b9ff
+// light green: #73dbcf
+
+  Expanded _indRecipe(String dishName, String imageName) {
+    return Expanded(
+        child: Container(
+            margin: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: Offset(2, 4))
+                ]),
+            child: Stack(children: <Widget>[
+              Positioned.fill(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SvgPicture.asset(
+                        'lib/assets/images/Colorful-Stingrays.svg',
+                        // color: Colors.,
+                        fit: BoxFit.cover,
+                      ))),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Text(
+                        dishName.toUpperCase(),
+                        style: TextStyle(
+                          // color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                        )
+                    ),
+                    Stack(children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset('lib/assets/images/' + imageName,
+                            width: 300, height: 200, fit: BoxFit.cover),
+                      ),
+                      Container(
+                        height: 220,
+                        alignment: Alignment.bottomCenter,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blue,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            alignment: Alignment.center,
+                            icon: Icon(Icons.arrow_downward),
+                            color: Colors.white,
+                            iconSize: 30,
+                            onPressed: (){}
+                          ),
+                      ))
+                    ])
+                  ],
+                ),
+              )
+            ]
+          )
+        )
+      );
+  }
+}
+
+
+class IndRecipe extends StatefulWidget {
+  final String dishName, imageName;
+
+  IndRecipe({Key key, this.dishName, this.imageName}) : super(key: key);
+
+  @override
+  _IndRecipeState createState() => _IndRecipeState();
+}
+class _IndRecipeState extends State<IndRecipe> {
+
+  bool expanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    expanded = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Container(
+            margin: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: Offset(2, 4))
+                ]),
+            child: Stack(children: <Widget>[
+              Positioned.fill(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SvgPicture.asset(
+                        'lib/assets/images/Colorful-Stingrays.svg',
+                        // color: Colors.,
+                        fit: BoxFit.cover,
+                      ))),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Text(
+                        widget.dishName.toUpperCase(),
+                        style: TextStyle(
+                          // color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                        )
+                    ),
+                    Stack(children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset('lib/assets/images/' + widget.imageName,
+                            width: 300, height: 200, fit: BoxFit.cover),
+                      ),
+                      // ExpansionTile(title: Text('re'), ),
+                      Container(
+                        height: 220,
+                        alignment: Alignment.bottomCenter,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blue.withOpacity(0.7),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            alignment: Alignment.center,
+                            icon: Icon(Icons.arrow_downward),
+                            color: Colors.white,
+                            iconSize: 30,
+                            onPressed: (){
+                              setState(() {
+                                expanded = !expanded;
+                              });
+                            }
+                          ),
+                      ))
+                    ]),
+                  ],
+                ),
+              )
+            ]
+          )
+        )
+      );
+    }
 }
